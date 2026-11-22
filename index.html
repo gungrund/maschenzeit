@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#724A25">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="maschenzeit">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>maschenzeit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Farbwelt angelehnt an liberior24.de */
+:root{
+  --brown:#724A25; --brown-d:#5a3a1c; --brown-l:#8b6440;
+  --cream:#F6EFE7; --cream2:#EFE4D7; --sand:#E6D6C3;
+  --ink:#4A545B; --ink-d:#2f363b; --muted:#7b858c; --line:#E7DDD1; --white:#fff;
+  --orange:#E0622A; --orange-l:#FBE4D8; --green:#5E7D5B; --green-l:#E4ECE1;
+  --r:14px; --shadow:0 2px 12px rgba(90,58,28,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font-family:Montserrat,system-ui,sans-serif;font-size:16.5px;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:Inter,system-ui,sans-serif;color:var(--brown);margin:.2em 0 .5em;line-height:1.2;font-weight:800}
+h1{font-size:1.85rem;letter-spacing:-.01em} h2{font-size:1.4rem} h3{font-size:1.12rem;font-weight:700}
+a{color:var(--brown)}
+button,input,select,textarea{font:inherit;color:inherit}
+.eyebrow{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--brown-l)}
+.eyebrow.o{color:var(--orange)}
+
+/* Kopf wie im Shop */
+.topbar{background:#f4f4f4;font-size:.8rem;color:var(--ink);padding:calc(6px + env(safe-area-inset-top)) 16px 6px;display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:34px}
+.topbar b{color:var(--brown)}
+.topbar .tbtn{border:0;background:var(--brown);color:#fff;border-radius:999px;padding:3px 11px;font-weight:700;font-size:.75rem;cursor:pointer}
+header.head{display:flex;align-items:center;gap:18px;padding:14px calc(20px + env(safe-area-inset-right)) 14px calc(20px + env(safe-area-inset-left));max-width:1240px;margin:0 auto}
+.logo{font-family:Montserrat,sans-serif;font-weight:800;font-size:2.1rem;color:var(--brown);letter-spacing:-.04em;text-decoration:none;line-height:1}
+.logo span{color:var(--orange)}
+.search{flex:1;display:flex;align-items:center;background:#f1f1f1;border-radius:999px;padding:0 16px;min-height:44px;max-width:520px;margin-left:auto}
+.search input{border:0;background:transparent;flex:1;outline:none;min-height:44px;text-align:center}
+.search button{border:0;background:none;font-size:1.1rem;cursor:pointer}
+nav.main{background:var(--brown)}
+nav.main .in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;padding:0 12px}
+nav.main a{color:#fff;text-decoration:none;padding:14px 13px;font-size:.92rem;font-weight:500;border-bottom:3px solid transparent}
+nav.main a.on{border-bottom-color:#fff;font-weight:700}
+main{max-width:1240px;margin:0 auto;padding:22px calc(20px + env(safe-area-inset-right)) 120px calc(20px + env(safe-area-inset-left))}
+nav.bottom{display:none}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:20px 0 30px}
+@media (max-width:820px){
+  .topbar{font-size:.74rem;gap:8px}
+  header.head{padding:10px 14px;gap:10px}
+  .logo{font-size:1.6rem}
+  .search{display:none}
+  nav.main{display:none}
+  main{padding:14px 14px calc(100px + env(safe-area-inset-bottom))}
+  nav.bottom{display:flex;position:fixed;left:0;right:0;bottom:0;background:var(--brown);padding:6px 4px calc(6px + env(safe-area-inset-bottom));overflow-x:auto;z-index:30;gap:2px}
+  nav.bottom a{flex:1 0 66px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.68rem;font-weight:600;text-decoration:none;color:#f1e4d6;padding:6px 2px;border-radius:10px}
+  nav.bottom a .ic{font-size:1.25rem}
+  nav.bottom a.on{background:rgba(255,255,255,.16);color:#fff}
+  h1{font-size:1.5rem}
+}
+
+/* Karten im liberior-Stil */
+.card{background:var(--cream);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.card.w{background:#fff;border:1px solid var(--line)}
+.bcard{border-radius:var(--r);overflow:hidden;background:var(--cream);box-shadow:var(--shadow);margin-bottom:16px;display:flex;flex-direction:column}
+.bcard .hd{background:var(--brown);color:#fff;padding:11px 16px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.bcard .hd b{font-family:Inter,sans-serif;font-weight:800;letter-spacing:.05em;text-transform:uppercase;font-size:.9rem}
+.bcard .hd .pill{background:var(--orange);color:#fff;border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.bcard .hd a{color:#fff;font-size:.82rem;font-weight:700;text-decoration:none;white-space:nowrap}
+.bcard .bd{padding:18px;flex:1}
+.oval{background:#efe2d2;border-radius:50%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:3.2rem;overflow:hidden;background-size:cover;background-position:center}
+.split{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+@media (max-width:520px){ .split{grid-template-columns:96px 1fr;gap:12px} .oval{font-size:2.3rem} }
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+@media (max-width:400px){ .grid2{grid-template-columns:1fr} }
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:4px;border:0;background:var(--brown);color:#fff;font-weight:700;cursor:pointer;text-decoration:none;font-size:.95rem}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:#fff;color:var(--brown);border:1.5px solid var(--brown)}
+.btn.or{background:var(--orange)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.sm{min-height:38px;padding:0 13px;font-size:.88rem}
+.btn[disabled]{opacity:.45}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.f{display:block;font-weight:700;font-size:.86rem;margin:12px 0 5px;color:var(--ink-d)}
+input.i,select.i,textarea.i{width:100%;min-height:48px;padding:10px 13px;border:1.5px solid var(--line);border-radius:6px;background:#fff}
+textarea.i{min-height:110px;resize:vertical}
+input.i:focus,select.i:focus,textarea.i:focus{outline:2px solid var(--brown-l);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{border:1.5px solid var(--sand);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.88rem;color:var(--ink-d)}
+.chip.on{background:var(--brown);border-color:var(--brown);color:#fff}
+.link{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:var(--r);border:1px solid var(--line);background:#fff;text-decoration:none;color:var(--ink)}
+.link:hover{border-color:var(--brown)}
+.link .em{font-size:1.6rem;line-height:1}
+.link b{display:block;color:var(--brown);font-family:Inter,sans-serif}
+.go{font-weight:700;color:var(--brown);font-size:.88rem;text-decoration:none}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--green-l);color:#3c5a3a;margin:2px 4px 0 0}
+.tag.o{background:var(--orange-l);color:#a2421a} .tag.b{background:var(--cream2);color:var(--brown)}
+
+/* Begrüßung */
+.hello{background:var(--cream);border-radius:var(--r);overflow:hidden;margin-bottom:18px;display:grid;grid-template-columns:1fr 260px}
+.hello .tx{padding:26px}
+.hello .tx h1{font-size:2rem;margin-bottom:.3em}
+.hello .art{background:#efe2d2;display:flex;align-items:center;justify-content:center}
+.hello .art svg{width:200px;height:200px}
+@media (max-width:700px){ .hello{grid-template-columns:1fr} .hello .art{display:none} .hello .tx{padding:18px} .hello .tx h1{font-size:1.5rem} }
+.care{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.care span{background:#fff;border-radius:999px;padding:7px 12px;font-size:.84rem;font-weight:600;color:var(--brown)}
+.tipp{border-left:4px solid var(--orange);background:#fff;padding:14px 16px;border-radius:0 var(--r) var(--r) 0;margin-bottom:16px;box-shadow:var(--shadow)}
+
+.proj{background:var(--cream);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column}
+.proj .ph{aspect-ratio:4/3;background:#efe2d2 center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+.proj .bd{padding:12px 14px}
+.proj .bd b{font-family:Inter,sans-serif;color:var(--brown)}
+table.t{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff;border-radius:8px;overflow:hidden}
+table.t th,table.t td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--brown-l)}
+.scroll{overflow-x:auto}
+.result{font-size:1.55rem;font-family:Inter,sans-serif;font-weight:800;color:var(--brown)}
+.counter{display:flex;align-items:center;gap:16px;justify-content:center;margin:10px 0}
+.counter .n{font-family:Inter,sans-serif;font-weight:800;color:var(--brown);font-size:3.2rem;min-width:120px;text-align:center}
+.counter button{width:76px;height:76px;border-radius:50%;border:0;font-size:2.1rem;font-weight:800;cursor:pointer}
+.counter .p{background:var(--brown);color:#fff}.counter .m{background:#fff;color:var(--brown);border:2px solid var(--sand)}
+.ai{background:#fff;border:1px dashed var(--brown-l);border-radius:var(--r);padding:14px;margin-top:12px}
+.ai p{margin:.4em 0} .ai ul,.ai ol{margin:.3em 0;padding-left:1.3em}
+.overlay{position:fixed;inset:0;background:rgba(47,30,14,.5);z-index:50;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:calc(20px + env(safe-area-inset-top)) 12px 40px}
+.sheet{background:#fff;border-radius:var(--r);max-width:760px;width:100%;padding:20px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(100px + env(safe-area-inset-bottom));background:var(--ink-d);color:#fff;padding:12px 18px;border-radius:10px;z-index:80;font-weight:600;max-width:90vw}
+.switch{display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;background:var(--cream);cursor:pointer}
+.switch input{width:24px;height:24px;accent-color:var(--brown)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumbs div{position:relative}
+.thumbs img{width:96px;height:96px;object-fit:cover;border-radius:10px;display:block}
+.thumbs button{position:absolute;top:-6px;right:-6px;width:28px;height:28px;border-radius:50%;border:0;background:var(--ink-d);color:#fff;cursor:pointer}
+.big img{width:100%;border-radius:10px;margin-bottom:8px}
+details.lern{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 14px;margin-bottom:10px}
+details.lern summary{cursor:pointer;font-weight:700;padding:11px 0;list-style:none;color:var(--ink-d)}
+details.lern summary::-webkit-details-marker{display:none}
+details.lern summary::before{content:"＋ ";color:var(--orange);font-weight:800}
+details.lern[open] summary::before{content:"－ "}
+.note{background:var(--cream);border-radius:10px;padding:12px 14px;font-size:.9rem}
+.month{scroll-margin-top:20px}
+.month.now .hd{background:var(--orange)}
+.idea{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--sand)}
+.idea:last-child{border-bottom:0}
+.idea .em{font-size:1.8rem;width:44px;height:44px;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.idea b{font-family:Inter,sans-serif;color:var(--ink-d)}
+.pause{text-align:center}
+.pause .big{font-size:4rem}
+.timer{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="topbar" id="topbar"></div>
+<header class="head">
+  <a class="logo" href="#start">maschen<span>zeit</span></a>
+  <form class="search" id="hsearch"><input id="hq" placeholder="Anleitung suchen, z. B. Socken …" aria-label="Anleitung suchen"><button aria-label="Suchen">🔍</button></form>
+</header>
+<nav class="main"><div class="in" id="nav1"></div></nav>
+<main id="main"></main>
+<nav class="bottom" id="nav2"></nav>
+<div id="ov"></div>
+
+<script>
+/* ================= Grundlagen ================= */
+const ART = `<svg viewBox="0 0 200 200"><circle cx="92" cy="110" r="62" fill="#b7794a"/><g fill="none" stroke="#e9c9a4" stroke-width="4" stroke-linecap="round"><path d="M36 92c34-18 86-16 116 14"/><path d="M32 118c40-22 92-16 120 8"/><path d="M46 146c30-18 70-20 98-6"/><path d="M66 56c-12 34-8 86 26 114"/><path d="M104 50c-16 40-10 90 22 116"/></g><path d="M140 60 L184 18" stroke="#724A25" stroke-width="6" stroke-linecap="round"/><path d="M150 72 L190 40" stroke="#724A25" stroke-width="6" stroke-linecap="round"/><circle cx="186" cy="16" r="6" fill="#E0622A"/><circle cx="192" cy="38" r="6" fill="#E0622A"/><path d="M152 120c20 10 26 40 10 60" fill="none" stroke="#b7794a" stroke-width="4" stroke-linecap="round"/></svg>`;
+const VIEWS = [
+  ['start','🏡','Start'],
+  ['saison','🍂','Jahreszeiten'],
+  ['anleitungen','🔎','Anleitungen'],
+  ['projekte','🧶','Projekte'],
+  ['vorrat','🧺','Vorrat'],
+  ['rechner','🧮','Umrechnen'],
+  ['lernen','📖','Tipps & Lernen'],
+  ['welt','🌍','Stricken weltweit'],
+  ['wolle','🛒','Wolle kaufen'],
+  ['upcycling','♻️','Upcycling'],
+];
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const enc = encodeURIComponent;
+const LS = { get(k,d){ try{ const v=localStorage.getItem('mz_'+k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem('mz_'+k,JSON.stringify(v));}catch(e){} } };
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
+function md(txt){
+  const lines = esc(txt).split('\n'); let out='', list=null;
+  const inl = s => s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>');
+  for (const l of lines){
+    let m;
+    if ((m=l.match(/^\s*[-*•]\s+(.*)/))){ if(list!=='ul'){ if(list) out+=`</${list}>`; out+='<ul>'; list='ul'; } out+=`<li>${inl(m[1])}</li>`; continue; }
+    if ((m=l.match(/^\s*\d+[.)]\s+(.*)/))){ if(list!=='ol'){ if(list) out+=`</${list}>`; out+='<ol>'; list='ol'; } out+=`<li>${inl(m[1])}</li>`; continue; }
+    if (list){ out+=`</${list}>`; list=null; }
+    if ((m=l.match(/^#{1,4}\s+(.*)/))) { out+=`<h3>${inl(m[1])}</h3>`; continue; }
+    if (l.trim()) out+=`<p>${inl(l)}</p>`;
+  }
+  if (list) out+=`</${list}>`;
+  return out;
+}
+const dayNo = () => Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 864e5);
+
+/* ================= Inhalte ================= */
+// Tipps (aus deutschen & internationalen Strick-Quellen, Ergonomie-Ratgebern, Strick-Apps)
+const TIPS = [
+  ['Gesundheit','Alle 20–30 Minuten kurz aufstehen, ein paar Schritte gehen und die Schultern locker kreisen lassen.'],
+  ['Gesundheit','Die 20-20-20-Regel für die Augen: alle 20 Minuten 20 Sekunden lang in die Ferne schauen.'],
+  ['Gesundheit','Ein Glas Wasser neben das Wollkörbchen stellen – beim Stricken vergisst man das Trinken leicht.'],
+  ['Gesundheit','Faust machen, dann die Finger weit spreizen – 5× wiederholen. Das lockert die Hände.'],
+  ['Gesundheit','Handgelenk dehnen: Arm ausstrecken, Handfläche nach vorn, Finger mit der anderen Hand sanft zurückziehen. Seiten wechseln.'],
+  ['Gesundheit','Rücken gerade, Schultern runter, Ellbogen aufstützen – ein Kissen auf dem Schoß hebt die Arbeit an und entlastet den Nacken.'],
+  ['Gesundheit','Faden locker führen: Ein entspannter Griff schont Hände und Handgelenke und gibt ein gleichmäßigeres Maschenbild.'],
+  ['Gesundheit','Rundstricknadeln statt langer gerader Nadeln: Das Gewicht liegt im Schoß statt auf den Handgelenken.'],
+  ['Gesundheit','Holz- oder Bambusnadeln sind wärmer und rutschen weniger – angenehmer für empfindliche Hände.'],
+  ['Gesundheit','Gutes Licht! Tageslicht oder eine helle Lampe von der Seite – besonders bei dunkler Wolle.'],
+  ['Gesundheit','Tun die Hände weh, ist das ein Signal: Pause machen, eine Weile pausieren – und wenn es bleibt, ärztlich abklären lassen.'],
+  ['Gesundheit','Mal die Projekte wechseln: dicke und dünne Nadeln abwechseln beansprucht die Hände unterschiedlich.'],
+  ['Wohlfühlen','Studien aus Großbritannien und Schweden zeigen: Stricken beruhigt, gibt dem Tag Struktur und macht viele Menschen glücklicher.'],
+  ['Wohlfühlen','Gleichmäßige rechte Maschen wirken fast wie Meditation – ideal zum Abschalten nach einem langen Tag.'],
+  ['Wohlfühlen','Eine feste „Strickecke“ mit Lampe, Decke, Körbchen und Tee macht das Stricken zum kleinen Ritual.'],
+  ['Wohlfühlen','Zwei Projekte parallel: eines zum Nachdenken (Muster) und eines zum Entspannen (glatt rechts) – für jede Stimmung das Richtige.'],
+  ['Wohlfühlen','Hörbuch oder Lieblingsmusik dazu – einfache Muster und gute Geschichten passen wunderbar zusammen.'],
+  ['Wohlfühlen','Mit Freundinnen stricken: In England heißt das „Knit & Natter“ – stricken und quatschen. Gibt es auch als Strickcafé in vielen Städten.'],
+  ['Wohlfühlen','Fertige Teile fotografieren und festhalten – es tut gut zu sehen, was man alles geschafft hat.'],
+  ['Technik','Immer eine Maschenprobe stricken – und vor dem Messen waschen. So passt der Pullover am Ende wirklich.'],
+  ['Technik','Maschenmarkierer an jedem Mustersatz sparen viel Zählen und Aufribbeln.'],
+  ['Technik','Rettungsleine (Lifeline): Zahnseide durch eine Reihe ziehen – geht etwas schief, ribbelt man nur bis dahin auf.'],
+  ['Technik','Lockerer Anschlag: zwei Nadeln zusammen nehmen oder eine Nummer dicker.'],
+  ['Technik','Abketten immer locker – lieber mit einer dickeren Nadel, sonst wird der Rand zu stramm.'],
+  ['Technik','Neue Knäuel am Reihenanfang ansetzen – so verschwinden die Fäden später in der Naht.'],
+  ['Technik','Ein Garn aus derselben Färbepartie kaufen – die Partienummer steht auf der Banderole.'],
+  ['Technik','Banderole aufheben! Darauf stehen Pflegehinweise, Lauflänge und Partie – am besten im Projekt fotografieren.'],
+  ['Technik','Fertige Teile spannen: anfeuchten, auf Maß feststecken, trocknen lassen. Wirkt Wunder, gerade bei Lochmustern.'],
+  ['Technik','Bei Ärmeln und Socken beide gleichzeitig stricken (zwei Knäuel) – dann werden sie garantiert gleich lang.'],
+  ['Technik','Die eigene Größe in der Anleitung mit Textmarker einkreisen, bevor es losgeht.'],
+  ['Technik','Reihen zählen fällt leichter mit einem Zähler – der große Reihenzähler steckt in jedem Projekt hier in der App.'],
+  ['Garn & Pflege','Wollsachen eher lüften als waschen – Wolle reinigt sich an der frischen Luft fast von selbst.'],
+  ['Garn & Pflege','Wolle lauwarm mit Wollwaschmittel waschen, nicht reiben, in ein Handtuch rollen und liegend trocknen.'],
+  ['Garn & Pflege','Gegen Motten: Zedernholz oder Lavendelsäckchen in den Wollvorrat, Vorrat ab und zu durchschauen.'],
+  ['Garn & Pflege','Mulesingfreie Merinowolle oder RWS-Siegel wählen – das schont die Schafe.'],
+  ['Garn & Pflege','Für Socken Garn mit etwas Polyamid oder Nylon nehmen – hält an Ferse und Spitze viel länger.'],
+  ['Garn & Pflege','Baumwolle ist kühl und waschbar – ideal für Sommer-Tops, Spültücher und Babysachen.'],
+  ['Garn & Pflege','Reste nach Garnstärke sortieren – dann findet man sie für Streifen- und Restprojekte schnell wieder.'],
+  ['Lifestyle','„Hygge“ aus Dänemark: Kerzenlicht, Tee, eine weiche Decke und das Strickzeug – Gemütlichkeit als Lebensgefühl.'],
+  ['Lifestyle','„Slow Fashion“: Ein selbstgestrickter Pullover hält oft Jahrzehnte – das Gegenteil von Wegwerfmode.'],
+  ['Lifestyle','Schweden wählte 2022 handgestrickte Kleidung zum „Weihnachtsgeschenk des Jahres“.'],
+  ['Lifestyle','Im Juni ist „World Wide Knit in Public Day“ – Strickende treffen sich zum gemeinsamen Stricken in Parks und Cafés.'],
+  ['Lifestyle','Strick-Urlaub: Auf den Shetlandinseln gibt es jedes Jahr im Herbst die „Shetland Wool Week“ mit Kursen und Besuchen bei Schafzüchtern.'],
+  ['Lifestyle','Einmal im Jahr ein „Garn-Fasten“ einlegen: nur aus dem Vorrat stricken. Spart Geld und macht kreativ.'],
+  ['Lifestyle','Geschenke früh planen: Wer im September anfängt, ist zu Weihnachten entspannt.'],
+  ['Lifestyle','Stricken unterwegs: Ein kleines Sockenprojekt passt in jede Handtasche – für Wartezimmer, Zugfahrt oder Café.'],
+];
+
+const PAUSEN = [
+  ['🚶‍♀️','Einmal aufstehen, bitte!','Ein paar Schritte durchs Zimmer, vielleicht zum Fenster – frische Luft tut gut.'],
+  ['💧','Zeit für einen Schluck','Ein Glas Wasser oder ein Tee – beim Stricken vergisst man das Trinken leicht.'],
+  ['✋','Hände lockern','Faust machen, Finger weit spreizen – 5× wiederholen. Dann die Hände locker ausschütteln.'],
+  ['🙆‍♀️','Schultern kreisen','Schultern 5× nach hinten kreisen, dann den Kopf sanft zur Seite neigen – rechts und links.'],
+  ['👀','Augen ausruhen','20 Sekunden aus dem Fenster in die Ferne schauen. Die Augen danken es.'],
+  ['🤲','Handgelenke dehnen','Arm ausstrecken, Handfläche nach vorn, die Finger mit der anderen Hand sanft zurückziehen. Seiten wechseln.'],
+];
+
+const MONATE = [
+  ['Januar','❄️','Winter',[['🧦','Dicke Wollsocken','Für kalte Füße – mit 6-fädiger Sockenwolle schnell gestrickt.','Wollsocken 6-fach'],['🛋️','Kuscheldecke aus Resten','Große Quadrate oder Streifen – ein schönes Langzeitprojekt.','Decke stricken Restgarn'],['🧣','Rippenschal','Ganz entspannt, perfekt für lange Winterabende.','Rippenschal']]],
+  ['Februar','❤️','Winter',[['💝','Herzen zum Valentinstag','Kleine gestrickte Herzen als Anhänger oder Grußkarten-Deko.','gestricktes Herz'],['🧤','Pulswärmer','Schnelles Projekt aus einem Knäuel – auch toll zum Verschenken.','Pulswärmer'],['🧶','Neue Technik lernen','Zopfmuster oder Norweger ausprobieren – an einer Mütze.','Mütze Zopfmuster']]],
+  ['März','🌱','Frühling',[['🐣','Osterhasen & Eier','Kleine Figuren aus Resten für den Ostertisch.','Osterhase stricken'],['🧣','Leichtes Übergangstuch','Dreieckstuch in frischen Farben.','Dreieckstuch Frühling'],['🌷','Frühjahrsputz im Vorrat','Wolle sortieren, Restkiste anlegen, Ideen notieren.','Restgarn Ideen']]],
+  ['April','🌸','Frühling',[['🧽','Spültücher aus Baumwolle','Nachhaltig, schnell, praktisch – ideales Zwischendurch-Projekt.','Spültuch stricken Baumwolle'],['🧥','Leichte Strickjacke','Aus Baumwoll-Leinen-Mischung für kühle Frühlingsabende.','Sommerstrickjacke'],['🪴','Topf-Überzieher','Gestrickte Hüllen für Blumentöpfe.','Blumentopf Hülle stricken']]],
+  ['Mai','💐','Frühling',[['🌼','Lochmustertuch zum Muttertag','Ein feines Geschenk mit Herz.','Lochmustertuch'],['👚','Sommer-Top','Aus Baumwolle oder Leinen, leicht und luftig.','Top stricken Baumwolle'],['🧺','Picknick-Kissen','Robuste Kissenhüllen für Garten und Balkon.','Kissenhülle stricken']]],
+  ['Juni','☀️','Sommer',[['👜','Strandtasche','Aus Baumwoll- oder Bastgarn – stabil und hübsch.','Strandtasche stricken'],['🍉','Leinen-Shirt','Kühl auf der Haut, wird mit jeder Wäsche weicher.','Leinen Shirt stricken'],['🌳','Draußen stricken','Am 2. Samstag im Juni ist „World Wide Knit in Public Day“.','Strickcafé']]],
+  ['Juli','🏖️','Sommer',[['🧦','Sneaker-Söckchen','Kurz und schnell – gut für unterwegs im Urlaub.','Sneakersocken stricken'],['🛍️','Netz-Einkaufsbeutel','Ersetzt die Plastiktüte – nachhaltig und praktisch.','Netzbeutel stricken'],['🧶','Urlaubsprojekt','Ein kleines Projekt, das in jede Tasche passt.','Reiseprojekt stricken']]],
+  ['August','🌾','Sommer',[['🗓️','Herbst planen','Garne und Anleitungen für die Herbstprojekte aussuchen.','Herbst Strickanleitung'],['🦺','Weste / Pullunder','Total angesagt und schneller fertig als ein Pullover.','Pullunder'],['🎒','Schul-Mützen','Für Enkel oder Nachbarskinder zum Schulstart.','Kindermütze stricken']]],
+  ['September','🍁','Herbst',[['🧢','Herbstmütze','Mit Bommel aus Resten.','Mütze mit Bommel'],['🎁','Weihnachts-Geschenke beginnen','Jetzt anfangen = im Dezember entspannt.','Geschenk stricken'],['🐑','Wollfest besuchen','Im Herbst gibt es viele Woll- und Handarbeitsmärkte.','Wollmarkt Herbst']]],
+  ['Oktober','🎃','Herbst',[['🎃','Gestrickte Kürbisse','Hübsche Herbstdeko aus Restgarn.','gestrickter Kürbis'],['🧤','Handschuhe & Fäustlinge','Bevor der erste Frost kommt.','Fäustlinge stricken'],['☕','Tassenwärmer','Kleines Mitbringsel zum Kaffeeklatsch.','Tassenwärmer stricken']]],
+  ['November','🕯️','Herbst',[['🧣','Mütze-Schal-Set','Klassisches Weihnachtsgeschenk.','Mütze Schal Set'],['🎄','Adventskalender-Söckchen','24 Mini-Socken als Kalender.','Adventskalender Socken'],['🏠','Hausschuhe','Gestrickt und gefilzt – richtig warm.','Filzpantoffeln stricken']]],
+  ['Dezember','🎄','Winter',[['⭐','Baumschmuck','Sterne, Kugeln, Wichtel aus Resten.','Weihnachtsschmuck stricken'],['🎁','Schnelle Last-Minute-Geschenke','Stirnband oder Loop – an einem Abend fertig.','Stirnband stricken schnell'],['🧦','Weihnachtssocken','Für gemütliche Feiertage.','Weihnachtssocken']]],
+];
+
+const WELT = [
+  ['🇩🇰','Dänemark – Hygge','Gemütlichkeit als Lebensgefühl: Kerzen, Tee, Decke und Strickzeug. Dänische Designerinnen stricken schlicht, mit weichen Naturtönen und viel Mohair.','Hygge stricken'],
+  ['🇳🇴','Norwegen – Lusekofte & Selbu','Der „Läusepullover“ aus dem Setesdal (19. Jh.) mit kleinen Punkten, und die Selbu-Handschuhe mit Sternmuster. Im Fernsehen lief 2013 sogar ein stundenlanger „Nationaler Strickabend“.','Norwegermuster'],
+  ['🇮🇸','Island – Lopapeysa','Der Islandpullover mit rundem Mustersattel aus Lopi-Wolle. Auf Island leben mehr Schafe als Menschen – die Wolle ist leicht, warm und wasserabweisend.','Lopapeysa Anleitung'],
+  ['🏴󠁧󠁢󠁳󠁣󠁴󠁿','Schottland – Fair Isle & Shetland','Bunte Bänder, pro Reihe höchstens zwei Farben. Jedes Jahr im Herbst lockt die „Shetland Wool Week“ Strickende aus aller Welt.','Fair Isle stricken'],
+  ['🇮🇪','Irland – Aran','Die cremeweißen Zopfpullover von den Aran-Inseln – jeder Zopf hat seine eigene Bedeutung.','Aran Pullover Zopfmuster'],
+  ['🇪🇪','Estland – Haapsalu-Tücher','Hauchfeine Spitzentücher mit kleinen Noppen („Nupps“), so fein, dass sie durch einen Ring passen.','Haapsalu Tuch'],
+  ['🇯🇵','Japan – Muster-Bücher','Japanische Strickbücher arbeiten fast nur mit Zeichen-Diagrammen – berühmt für raffinierte Strukturmuster. Dazu „Sashiko“: sichtbares Flicken als Kunst.','japanische Strickmuster'],
+  ['🇬🇧','England – Knit & Natter','„Stricken und plaudern“: Treffen in Cafés und Gemeindehäusern. Britische Forschung zeigt, wie gut das gemeinsame Stricken Körper und Seele tut.','Strickcafé'],
+  ['🇸🇪','Schweden – Weihnachtsgeschenk des Jahres','2022 wurde handgestrickte Kleidung in Schweden zum „Weihnachtsgeschenk des Jahres“ gekürt.','skandinavisch stricken'],
+  ['🇵🇪','Peru – Chullo','Die bunten Mützen mit Ohrenklappen aus den Anden, traditionell aus Alpaka gestrickt.','Chullo Mütze'],
+  ['🇺🇸','USA – Yarn Bombing','Strickgraffiti: Bäume, Bänke und Laternen werden „bestrickt“ – entstanden 2005 in Texas, heute weltweit.','Strickgraffiti'],
+  ['🌍','Weltweit – Knit in Public Day','Jedes Jahr im Juni treffen sich Strickende auf der ganzen Welt zum gemeinsamen Stricken in der Öffentlichkeit.','Knit in Public Day'],
+];
+
+const GARN = [
+  ['0','Lace / Spitzengarn','Lace, Light Fingering','1,5 – 2,25','33 – 40','ca. 400+ m'],
+  ['1','Sockengarn, sehr fein','Fingering, Superfine','2,25 – 3,25','27 – 32','ca. 175 – 210 m'],
+  ['2','Babygarn, fein','Sport, Fine','3,25 – 3,75','23 – 26','ca. 140 – 175 m'],
+  ['3','leicht / mittelfein','DK, Light Worsted','3,75 – 4,5','21 – 24','ca. 110 – 140 m'],
+  ['4','mittel','Worsted, Aran, Medium','4,5 – 5,5','16 – 20','ca. 80 – 110 m'],
+  ['5','dick','Chunky, Bulky','5,5 – 8','12 – 15','ca. 50 – 80 m'],
+  ['6','sehr dick','Super Bulky, Super Chunky','8 – 12,75','7 – 11','ca. 30 – 50 m'],
+  ['7','extrem dick','Jumbo','ab 12,75','bis 6','unter 30 m'],
+];
+const NADEL = [['2,0','0','14'],['2,25','1','13'],['2,5','1½','–'],['2,75','2','12'],['3,0','2½','11'],['3,25','3','10'],['3,5','4','–'],['3,75','5','9'],['4,0','6','8'],['4,5','7','7'],['5,0','8','6'],['5,5','9','5'],['6,0','10','4'],['6,5','10½','3'],['7,0','–','2'],['8,0','11','0'],['9,0','13','00'],['10,0','15','000'],['12,0','17','–'],['15,0','19','–'],['20,0','35','–'],['25,0','50','–']];
+const QUELLEN = [
+  {n:'Ravelry – nur kostenlose', d:'Riesige Sammlung, Filter „kostenlos“ ist gesetzt. Kostenloses Konto nötig.', em:'🌍', u:q=>`https://www.ravelry.com/patterns/search#query=${enc(q)}&availability=free&sort=best`},
+  {n:'DROPS / Garnstudio', d:'Tausende Gratis-Anleitungen auf Deutsch, viele Größen.', em:'🇳🇴', u:q=>`https://www.google.com/search?q=${enc('site:garnstudio.com kostenlose Anleitung '+q)}`},
+  {n:'Lana Grossa & Für Sie', d:'Kostenlose Modelle namhafter Garnhersteller.', em:'🧵', u:q=>`https://www.google.com/search?q=${enc('(site:fuersie.de OR site:lanagrossa.com) kostenlose Strickanleitung '+q)}`},
+  {n:'Schachenmayr / Rico / Lang', d:'Gratis-Anleitungen der großen Wollmarken.', em:'🏷️', u:q=>`https://www.google.com/search?q=${enc('(site:schachenmayr.com OR site:rico-design.de OR site:langyarns.com) Anleitung kostenlos '+q)}`},
+  {n:'Ganzes Netz (deutsch)', d:'Allgemeine Suche nach Gratis-Anleitungen.', em:'🔎', u:q=>`https://www.google.com/search?q=${enc('kostenlose Strickanleitung '+q+' deutsch')}`},
+  {n:'Englische Anleitungen', d:'Noch viel mehr Auswahl – mit dem Übersetzer im Browser gut lesbar.', em:'🇬🇧', u:q=>`https://www.google.com/search?q=${enc('free knitting pattern '+q)}`},
+  {n:'Video (YouTube)', d:'Zum Mitstricken – gut, wenn man eine Technik sehen will.', em:'▶️', u:q=>`https://www.youtube.com/results?search_query=${enc(q+' stricken anleitung deutsch')}`},
+  {n:'Pinterest-Ideen', d:'Zum Stöbern und Inspirieren.', em:'📌', u:q=>`https://de.pinterest.com/search/pins/?q=${enc(q+' stricken kostenlose anleitung')}`},
+];
+const IDEEN = ['Socken','Mütze','Schal','Loop','Pullover','Strickjacke','Weste','Tuch','Handschuhe','Stulpen','Babydecke','Babyjäckchen','Kissen','Decke','Tasche','Topflappen','Hausschuhe','Kuscheltier'];
+const ZUSATZ = ['Anfänger','einfach','Zopfmuster','Norweger','Top-down','Raglan','Restgarn','Lochmuster'];
+const SHOPS = [
+  {n:'liberior – unser Shop', d:'Filz, Heimtextilien und Schönes fürs Zuhause – regional aus dem Münsterland.', u:'https://www.liberior24.de/', t:['unser Shop']},
+  {n:'Soul Wool – nachhaltige Garne', d:'Große Auswahl an Bio- (GOTS), Recycling- und mulesingfreien Garnen.', u:'https://www.soul-wool.com/shop/de/kategorie_oeko,gots', t:['nachhaltig']},
+  {n:'Garnstudio (DROPS)', d:'Preiswerte Qualitätsgarne, regelmäßig Rabattaktionen; passende Gratis-Anleitungen.', u:'https://www.garnstudio.com/catalogues.php?lang=de', t:['günstig','Anleitungen']},
+  {n:'Fischer Wolle', d:'Monatliche Angebote von Markenwolle (Lang Yarns, Schoppel u. a.).', u:'https://www.fischer-wolle.de', t:['günstig','Angebote']},
+  {n:'woolconcept', d:'Markenwolle (Schachenmayr, Regia, Opal) und Nadeln zu fairen Preisen.', u:'https://www.woolconcept.de', t:['günstig']},
+  {n:'Wollplatz', d:'Sehr großes Sortiment, oft günstige Sets und Sonderangebote.', u:'https://www.wollplatz.de', t:['günstig','Auswahl']},
+];
+const SIEGEL = [
+  ['GOTS','Bio-Faser, ökologisch und sozial geprüft – die strengste Kennzeichnung.'],
+  ['RWS','Responsible Wool Standard – Tierwohl, grundsätzlich mulesingfrei.'],
+  ['mulesingfrei','Bei Merino wichtig: kein schmerzhafter Eingriff an den Schafen.'],
+  ['Recycling-Garn','Aus Alttextilien oder Resten – schont Rohstoffe.'],
+  ['Oeko-Tex 100','Auf Schadstoffe geprüft (sagt nichts über Tierhaltung).'],
+];
+const LERN = [
+  ['Grundlagen',[
+    ['Maschen anschlagen (Kreuzanschlag)','Fadenende ca. 3× so lang wie die gewünschte Breite lassen. Schlinge auf die Nadel, Faden über Daumen und Zeigefinger, mit der Nadel unter dem Daumenfaden durch, Zeigefinger-Faden holen, durchziehen, Daumen lösen und festziehen. Tipp: Mit zwei Nadeln zusammen anschlagen – dann wird der Rand nicht zu fest.'],
+    ['Rechte und linke Maschen','Rechts: Nadel von vorne nach hinten einstechen, Faden hinten holen. Links: Faden liegt vorne, von hinten nach vorne einstechen. Kraus rechts = jede Reihe rechts. Glatt rechts = Hinreihe rechts, Rückreihe links.'],
+    ['Abketten','Zwei Maschen stricken, die erste über die zweite heben – wiederholen. Locker abketten, ggf. mit einer Nadel ½–1 Nummer dicker.'],
+    ['Maschenprobe stricken','Ca. 15 × 15 cm im Muster stricken, waschen bzw. spannen, trocknen lassen, dann in der Mitte über 10 cm Maschen und Reihen zählen. Zu viele Maschen → dickere Nadel, zu wenige → dünnere Nadel.'],
+  ]],
+  ['Tricks & Kniffe',[
+    ['Maschenmarkierer nutzen','Am Rundenbeginn und bei Mustersätzen einen Ring einhängen – spart Zählen. Notfalls tut es Restgarn in Kontrastfarbe.'],
+    ['Rettungsleine (Lifeline)','Bei schwierigen Mustern alle paar Zentimeter einen glatten Faden (z. B. Zahnseide) durch alle Maschen ziehen. Muss man aufribbeln, fängt der Faden die Maschen auf.'],
+    ['Gefallene Masche hochholen','Mit einer Häkelnadel von vorn in die Masche, den Querfaden darüber holen und durchziehen – Reihe für Reihe nach oben.'],
+    ['Schöne Randmaschen','Erste Masche jeder Reihe wie zum Linksstricken abheben (Faden vorn), letzte Masche rechts stricken – ergibt eine saubere Kettrandmasche.'],
+    ['Neues Knäuel ansetzen','Am Reihenanfang ansetzen, beide Fäden 15 cm hängen lassen. Rundstrick: ein paar Maschen mit doppeltem Faden stricken.'],
+    ['Fäden unsichtbar vernähen','Auf der Rückseite diagonal durch die Maschenköpfe ziehen, einmal die Richtung wechseln, dann abschneiden.'],
+    ['Zwei Ärmel gleichzeitig','Beide Ärmel (oder Socken) mit zwei Knäueln nebeneinander auf einer Nadel stricken – sie werden garantiert gleich.'],
+    ['Spannen','Fertige Teile anfeuchten, auf Maß feststecken und trocknen lassen. Gleicht Unregelmäßigkeiten aus.'],
+  ]],
+  ['Anleitungen lesen',[
+    ['Häufige Abkürzungen','M = Masche · R = Reihe · Rd = Runde · re = rechts · li = links · zus.str. = zusammenstricken · U = Umschlag · abh. = abheben · Nd = Nadel · MM = Maschenmarkierer · wdh = wiederholen.'],
+    ['Englische Begriffe','k = knit (rechts) · p = purl (links) · k2tog = 2 re zus. · ssk = 2 re überzogen zus. · yo = Umschlag · CO = anschlagen · BO = abketten · RS/WS = Hin-/Rückreihe · gauge = Maschenprobe · ease = Bewegungszugabe.'],
+    ['Größenangaben verstehen','„84 (92) 100 M“ = S (M) L. Die eigene Größe vorher mit Textmarker einkreisen.'],
+  ]],
+];
+const UPCYCLE = [
+  ['🧶','Pullover aufribbeln','Alten, nicht gefilzten Pullover an den Nähten auftrennen, Garn aufwickeln, über einen Stuhl gespannt waschen – die Kräuselung verschwindet.'],
+  ['🎨','Restgarn-Projekte','Streifenschal, Granny-Decke, „Scrappy“-Socken, Topflappen oder Bommel – perfekt für die Reste-Kiste.'],
+  ['👕','T-Shirt-Garn','Alte T-Shirts spiralförmig in 2 cm breite Streifen schneiden, leicht ziehen – daraus Körbe, Untersetzer oder Taschen stricken.'],
+  ['🧦','Socken retten','Löcher stopfen statt wegwerfen; abgelaufene Fersen neu anstricken.'],
+  ['🧵','Sashiko & sichtbares Flicken','Aus Japan: Löcher mit schönen Stichen oder bunten Flicken bewusst sichtbar machen – wird zum Hingucker.'],
+  ['🔥','Filzen','Verfilzte Wollpullover nicht wegwerfen: daraus Topflappen, Sitzkissen oder Hausschuhsohlen schneiden – Filz franst nicht aus.'],
+];
+
+/* ================= Begrüßung (Uschi) ================= */
+function greeting(){
+  const h=new Date().getHours(), d=new Date().getDay();
+  const we = (d===0||d===6) ? ' Schönes Wochenende!' : '';
+  if (h>=5 && h<10)  return ['Guten Morgen, Uschi! ☕','Erst in Ruhe frühstücken – dann wartet die Wolle schon.'+we,['☕ Kaffee oder Tee?','🪟 Kurz lüften']];
+  if (h>=10 && h<12) return ['Hallo Uschi! 🌿','Schön, dass du da bist. Was liegt heute auf den Nadeln?'+we,['💧 Glas Wasser bereit?','🚶‍♀️ Zwischendurch aufstehen']];
+  if (h>=12 && h<14) return ['Mahlzeit, Uschi! 🍲','Hast du schon genug gegessen? Und etwas zu trinken neben dem Wollkorb?',['🍽️ Erst essen, dann stricken','💧 Etwas trinken']];
+  if (h>=14 && h<17) return ['Hallo Uschi! 🍰','Zeit für Kaffee und Kuchen? Denk dran: beim Stricken auch mal aufstehen und die Schultern lockern.',['☕ Kaffeepause','🙆‍♀️ Schultern kreisen']];
+  if (h>=17 && h<21) return ['Guten Abend, Uschi! 🕯️','Gemütliche Strickzeit. Mach dir gutes Licht an – das schont die Augen, gerade bei dunkler Wolle.',['💡 Gutes Licht','🫖 Ein Tee dazu']];
+  return ['Noch wach, Uschi? 🌙','Nur noch eine Reihe …? 😉 Morgen geht es ausgeruht weiter. Schlaf gut!',['😴 Bald schlafen','📍 Maschenmarkierer setzen']];
+}
+
+/* ================= Strickzeit-Timer mit Pausen ================= */
+let tStart = LS.get('tStart', null), tInt = LS.get('tInt', 30), tLastPause = LS.get('tLast', null);
+function timerOn(){ return !!tStart; }
+function timerToggle(){
+  if (tStart){ tStart=null; tLastPause=null; toast('Strickzeit beendet – schön gemacht, Uschi!'); }
+  else { tStart=Date.now(); tLastPause=Date.now(); toast(`Strickzeit läuft – ich erinnere dich alle ${tInt} Minuten an eine Pause.`); }
+  LS.set('tStart',tStart); LS.set('tLast',tLastPause); drawTop(); if(cur()==='start') render();
+}
+function mins(ms){ return Math.floor(ms/60000); }
+function drawTop(){
+  const el=$('#topbar');
+  if (timerOn()){
+    const run=mins(Date.now()-tStart), next=Math.max(0,tInt-mins(Date.now()-tLastPause));
+    el.innerHTML=`<span class="timer">⏱️ Strickzeit <b>${run} Min.</b> · nächste Pause in <b>${next} Min.</b></span><button class="tbtn" id="tstop">Beenden</button>`;
+    $('#tstop').onclick=timerToggle;
+  } else {
+    const tp=TIPS[dayNo()%TIPS.length];
+    el.innerHTML=`<span>🧶 <b>Tipp des Tages:</b> ${esc(tp[1])}</span>`;
+  }
+}
+function showPause(){
+  const p=PAUSEN[Math.floor(Math.random()*PAUSEN.length)];
+  openOv(`<div class="pause"><div class="big">${p[0]}</div><div class="eyebrow o">Kleine Pause, Uschi</div><h2>${p[1]}</h2><p>${p[2]}</p>
+    <p class="muted small">Du strickst jetzt seit ${mins(Date.now()-tStart)} Minuten.</p>
+    <div class="row" style="justify-content:center"><button class="btn" id="pOk">Erledigt – weiterstricken</button><button class="btn ghost" id="pEnd">Strickzeit beenden</button></div></div>`);
+  $('#pOk').onclick=()=>{ tLastPause=Date.now(); LS.set('tLast',tLastPause); closeOv(); drawTop(); };
+  $('#pEnd').onclick=()=>{ closeOv(); timerToggle(); };
+}
+setInterval(()=>{
+  if (!timerOn()) return;
+  drawTop();
+  if (Date.now()-tLastPause >= tInt*60000 && !$('#ov').innerHTML){ showPause(); }
+}, 15000);
+
+/* ================= Speicher auf dem Gerät (IndexedDB) ================= */
+let DB=null, ASSETS=null, SAMPLE=null, UID='lokal';
+let allDocs=[], gallery=[], dbState='laden';
+const myProjects = () => allDocs.filter(d=>!d.kind || d.kind==='projekt');
+const myStash = () => allDocs.filter(d=>d.kind==='garn' || d.kind==='nadel');
+let IDB=null;
+function idbOpen(){ return new Promise((res,rej)=>{ const r=indexedDB.open('maschenzeit',1);
+  r.onupgradeneeded=()=>{ r.result.createObjectStore('docs',{keyPath:'id'}); }; r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+function idbTx(mode, fn){ return new Promise((res,rej)=>{ const tx=IDB.transaction('docs',mode); const st=tx.objectStore('docs'); const out=fn(st); tx.oncomplete=()=>res(out&&out.result!==undefined?out.result:undefined); tx.onerror=()=>rej(tx.error); }); }
+async function reload(){ allDocs=(await idbTx('readonly',st=>st.getAll())||[]).sort((a,b)=>(b.updated||0)-(a.updated||0)); dbState='ok'; render(true); }
+const localDoc = id => ({
+  async set(body){ await idbTx('readwrite',st=>st.put({...body,id})); await reload(); },
+  async update(part){ const cur=allDocs.find(d=>d.id===id)||{}; await idbTx('readwrite',st=>st.put({...cur,...part,id})); allDocs=allDocs.map(d=>d.id===id?{...d,...part}:d); },
+  async delete(){ await idbTx('readwrite',st=>st.delete(id)); await reload(); },
+});
+const col = () => ({ doc: localDoc });
+// Galerie gibt es ohne Server nicht – Aufrufe ins Leere
+DB = { collection: () => ({ doc: () => ({ set: async()=>{}, delete: async()=>{} }) }) };
+async function initCaps(){
+  try{ IDB=await idbOpen(); await reload(); }catch(e){ dbState='aus'; render(true); }
+  try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+}
+const newId = p => p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+/* Sicherung: alles als Datei speichern / wiederherstellen */
+async function backupSave(){
+  const data={app:'maschenzeit',version:1,datum:new Date().toISOString(),docs:allDocs};
+  const name='maschenzeit-sicherung-'+new Date().toISOString().slice(0,10)+'.json';
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const file=new File([blob],name,{type:'application/json'});
+  try{
+    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:name}); }
+    else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000); }
+    LS.set('lastBackup',Date.now()); toast('Sicherung erstellt ✓'); render();
+  }catch(e){ if(e && e.name!=='AbortError') toast('Sicherung hat nicht geklappt'); }
+}
+async function backupLoad(file){
+  try{
+    const data=JSON.parse(await file.text());
+    if(data.app!=='maschenzeit' || !Array.isArray(data.docs)) throw 0;
+    await idbTx('readwrite',st=>{ data.docs.forEach(d=>d&&d.id&&st.put(d)); });
+    await reload(); toast(`${data.docs.length} Einträge wiederhergestellt ✓`);
+  }catch(e){ toast('Diese Datei ist keine maschenzeit-Sicherung'); }
+}
+function backupCard(){
+  const last=LS.get('lastBackup',null), days=last?Math.floor((Date.now()-last)/864e5):null;
+  return bcard('💾 Sicherung', `<div class="small">Deine Projekte und dein Vorrat liegen nur auf diesem Gerät. Speichere ab und zu eine Sicherung – am besten über „In Dateien sichern“ in den SharePoint-Ordner <b>maschenzeit Sicherungen</b>.</div>
+    <p class="small"><b>Letzte Sicherung:</b> ${last?new Date(last).toLocaleDateString('de-DE')+(days>0?` (vor ${days} Tag${days===1?'':'en'})`:' (heute)'):'noch keine'}</p>
+    <div class="row"><button class="btn" id="bkSave">Sicherung speichern</button><label class="btn sec" style="cursor:pointer">Sicherung laden<input type="file" accept=".json,application/json" id="bkLoad" style="display:none"></label></div>`);
+}
+function bindBackup(){
+  $('#bkSave') && ($('#bkSave').onclick=backupSave);
+  $('#bkLoad') && ($('#bkLoad').onchange=e=>{ const f=e.target.files[0]; if(f) backupLoad(f); e.target.value=''; });
+}
+function backupDue(){ const last=LS.get('lastBackup',null); return allDocs.length>0 && (!last || Date.now()-last>14*864e5); }
+
+/* Strick-Hilfe: ohne Server keine KI – stattdessen direkte Suche */
+async function askClaude(prompt, outEl, btn, q){
+  const s=(q||'').trim();
+  outEl.innerHTML=`<div class="ai"><p>Die Strick-Hilfe mit KI kommt, sobald maschenzeit auf unserem eigenen Server läuft. Bis dahin findest du hier Antworten:</p>
+    <div class="row"><a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=${enc(s+' stricken')}">🔎 Im Netz suchen</a>
+    <a class="btn sec sm" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(s+' stricken')}">▶️ Videos</a></div></div>`;
+}
+
+/* ================= Navigation ================= */
+function cur(){ const h=location.hash.replace('#',''); return VIEWS.some(v=>v[0]===h)?h:'start'; }
+function navHTML(bottom){ const c=cur(); return VIEWS.map(v=>`<a href="#${v[0]}" class="${v[0]===c?'on':''}">${bottom?`<span class="ic">${v[1]}</span>`:''}<span>${v[2]}</span></a>`).join(''); }
+let lastView=null;
+function render(dataOnly){
+  const c=cur();
+  if (dataOnly && !['projekte','start','vorrat','saison'].includes(c)) return;
+  if (dataOnly && $('#ov').innerHTML) return;
+  $('#nav1').innerHTML=navHTML(false); $('#nav2').innerHTML=navHTML(true);
+  const keep = dataOnly && lastView===c, y=window.scrollY;
+  $('#main').innerHTML = VIEW[c]() + `<footer>© ${new Date().getFullYear()} ungrund® · maschenzeit – mit Liebe gemacht für Uschi · im Stil von <a href="https://www.liberior24.de/" target="_blank" rel="noopener">liberior</a></footer>`;
+  (AFTER[c]||(()=>{}))();
+  window.scrollTo(0, keep?y:0);
+  lastView=c;
+  drawTop();
+}
+window.addEventListener('hashchange',()=>render());
+$('#hsearch').addEventListener('submit',e=>{ e.preventDefault(); suchQ=$('#hq').value.trim(); if(location.hash==='#anleitungen') render(); else location.hash='anleitungen'; });
+
+function bcard(title, body, opts={}){
+  return `<div class="bcard ${opts.cls||''}" ${opts.id?`id="${opts.id}"`:''}><div class="hd"><b>${title}</b>${opts.pill?`<span class="pill">${opts.pill}</span>`:''}${opts.link?`<a href="${opts.link[1]}">${opts.link[0]} →</a>`:''}</div><div class="bd">${body}</div></div>`;
+}
+
+/* ================= Ansichten ================= */
+const VIEW = {}, AFTER = {};
+
+VIEW.start = () => {
+  const [t,txt,care]=greeting();
+  const aktiv = myProjects().filter(p=>p.status==='In Arbeit');
+  const m = new Date().getMonth(), M = MONATE[m];
+  const tips=[0,1,2].map(i=>TIPS[(dayNo()*3+i*7)%TIPS.length]);
+  return `
+  <div class="hello"><div class="tx"><div class="eyebrow">${new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <h1>${t}</h1><div>${txt}</div>
+    <div class="care">${care.map(c=>`<span>${c}</span>`).join('')}</div>
+    <div class="row" style="margin-top:16px"><button class="btn ${timerOn()?'ghost':'or'}" id="tgo">${timerOn()?'⏹ Strickzeit beenden':'▶ Strickzeit starten'}</button>
+      <select class="i" id="tint" style="width:auto;min-height:46px">${[20,30,45,60].map(n=>`<option value="${n}" ${tInt===n?'selected':''}>Pause alle ${n} Min.</option>`).join('')}</select></div>
+  </div><div class="art">${ART}</div></div>
+
+  ${backupDue()?`<div class="tipp"><b>Kleine Erinnerung, Uschi:</b> Mach mal wieder eine Sicherung deiner Projekte. <a class="go" href="#projekte">Zur Sicherung →</a></div>`:''}
+  ${aktiv.length?`<div class="row" style="justify-content:space-between"><h2>Gerade auf den Nadeln</h2><a class="go" href="#projekte">Alle Projekte →</a></div><div class="grid">${aktiv.slice(0,4).map(projCard).join('')}</div><br>`:''}
+
+  <div class="grid2">
+    ${bcard(`${M[1]} Ideen für ${M[0]}`, `<div class="eyebrow o">${String(m+1).padStart(2,'0')} / 12 · ${M[2]}</div>
+      ${M[3].map(i=>`<div class="idea"><div class="em">${i[0]}</div><div><b>${i[1]}</b><div class="small">${i[2]}</div></div></div>`).join('')}
+      <br><a class="btn" href="#saison">Jetzt entdecken →</a>`, {pill:'Saison'})}
+    ${bcard('Tipps für heute', tips.map(tp=>`<div class="idea"><div class="em">${{Gesundheit:'💚',Wohlfühlen:'🫶',Technik:'🧶','Garn & Pflege':'🐑',Lifestyle:'✨'}[tp[0]]||'💡'}</div><div><div class="eyebrow">${tp[0]}</div><div class="small">${esc(tp[1])}</div></div></div>`).join('')+`<br><a class="btn" href="#lernen">Alle Tipps →</a>`)}
+  </div>
+  <div class="grid">
+    ${VIEWS.slice(1).map(v=>`<a class="proj" href="#${v[0]}" style="text-decoration:none;color:inherit"><div class="bd split" style="grid-template-columns:64px 1fr;gap:12px"><div class="oval" style="font-size:1.8rem">${v[1]}</div><div><b>${v[2]}</b><div class="small muted">${{
+      saison:'Projektideen passend zur Jahreszeit', anleitungen:'Kostenlose Anleitungen im Netz finden', projekte:'Eigene Projekte mit Fotos & Reihenzähler',
+      vorrat:'Welche Wolle & Nadeln habe ich?', rechner:'Maschenprobe, Größe, Garnmenge', lernen:'Viele Tipps, Kniffe & die Strick-Hilfe',
+      welt:'Wie man anderswo strickt', wolle:'Günstige und nachhaltige Wolle', upcycling:'Aus Vorhandenem Neues machen', galerie:'Geteilte Projekte ansehen'}[v[0]]}</div></div></div></a>`).join('')}
+  </div>`;
+};
+AFTER.start = () => {
+  bindProjCards();
+  $('#tgo').onclick=timerToggle;
+  $('#tint').onchange=e=>{ tInt=+e.target.value; LS.set('tInt',tInt); drawTop(); };
+};
+
+/* ---- Jahreszeiten ---- */
+VIEW.saison = () => {
+  const m=new Date().getMonth();
+  const order=[...Array(12)].map((_,i)=>(m+i)%12);
+  return `<h1>Projekte nach Jahreszeit</h1>
+  <p class="muted">Ideen für jeden Monat – beginnend mit jetzt. Mit „Merken“ landet eine Idee als Projekt mit Stand „Idee“ in deiner Liste.</p>
+  <div class="chips" id="mjump">${MONATE.map((M,i)=>`<span class="chip ${i===m?'on':''}" data-m="${i}">${M[1]} ${M[0]}</span>`).join('')}</div>
+  <div class="grid2">${order.map(i=>{const M=MONATE[i]; return bcard(`${M[1]} ${M[0]}`, `<div class="eyebrow ${i===m?'o':''}">${String(i+1).padStart(2,'0')} / 12 · ${M[2]}</div>`+M[3].map((d,j)=>`
+    <div class="idea"><div class="em">${d[0]}</div><div style="flex:1"><b>${d[1]}</b><div class="small">${d[2]}</div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" data-q="${esc(d[3])}">Anleitungen →</button><button class="btn sec sm" data-merk="${i}-${j}" ${dbState!=='ok'?'disabled':''}>☆ Merken</button></div></div></div>`).join(''),
+    {cls:'month '+(i===m?'now':''), id:'m'+i, pill:i===m?'Jetzt':''});}).join('')}</div>`;
+};
+AFTER.saison = () => {
+  $('#mjump').onclick=e=>{ const i=e.target.dataset.m; if(i!=null) document.getElementById('m'+i).scrollIntoView({behavior:'smooth'}); };
+  document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ suchQ=b.dataset.q; suchTags.clear(); location.hash='anleitungen'; });
+  document.querySelectorAll('[data-merk]').forEach(b=>b.onclick=async()=>{
+    const [i,j]=b.dataset.merk.split('-').map(Number), d=MONATE[i][3][j];
+    try{ await col().doc(newId('p')).set({kind:'projekt',title:d[1],status:'Idee',notes:d[2]+'\nSuchbegriff: '+d[3],photos:[],rows:0,public:false,updated:Date.now()});
+      b.textContent='★ Gemerkt'; b.disabled=true; toast('Als Idee in deinen Projekten gespeichert'); }catch(e){ toast('Merken hat nicht geklappt'); }
+  });
+};
+
+/* ---- Anleitungen ---- */
+let suchQ='', suchTags=new Set();
+VIEW.anleitungen = () => `
+  <h1>Kostenlose Anleitungen finden</h1>
+  <div class="card">
+    <label class="f" for="q">Was möchtest du stricken, Uschi?</label>
+    <div class="row"><input class="i" id="q" style="flex:1;min-width:200px" placeholder="z. B. Socken mit Zopfmuster, Babyjäckchen …" value="${esc(suchQ)}">
+    <button class="btn" id="qgo">Suchen</button></div>
+    <div class="chips" id="ideen">${IDEEN.map(x=>`<span class="chip ${suchQ===x?'on':''}" data-v="${x}">${x}</span>`).join('')}</div>
+    <div class="eyebrow">Zusätze</div>
+    <div class="chips" id="zus">${ZUSATZ.map(x=>`<span class="chip ${suchTags.has(x)?'on':''}" data-v="${x}">${x}</span>`).join('')}</div>
+  </div>
+  <div id="treffer"></div>
+  ${bcard('💡 Ideen von der Strick-Hilfe', `<div class="small">Beschreibe, was du suchst – die Strick-Hilfe schlägt passende Modelle, Garn- und Nadelstärke und gute Suchbegriffe vor.</div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="aiIdee">Ideen suchen</button></div><div id="aiOut"></div>`)}`;
+function fullQ(){ return [suchQ, ...suchTags].filter(Boolean).join(' ').trim(); }
+function drawTreffer(){
+  const q=fullQ(), el=$('#treffer'); if(!el) return;
+  if(!q){ el.innerHTML='<div class="note">Tippe oben ein Stichwort ein oder wähle eine Idee – dann erscheinen hier die Suchen in den besten Gratis-Quellen.</div><br>'; return; }
+  el.innerHTML = `<h3>Gratis-Anleitungen für „${esc(q)}“</h3><div class="grid2">${QUELLEN.map(s=>`
+    <a class="link" href="${s.u(q)}" target="_blank" rel="noopener"><span class="em">${s.em}</span><span><b>${s.n}</b><span class="small">${s.d}</span><br><span class="go">Jetzt öffnen →</span></span></a>`).join('')}</div>
+    <p class="muted small">Die Seiten öffnen sich in einem neuen Fenster. Gefällt dir eine Anleitung, kopiere den Link und lege damit ein Projekt an.</p>`;
+}
+AFTER.anleitungen = () => {
+  drawTreffer();
+  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ suchQ=e.target.value.trim(); render(); }});
+  $('#qgo').onclick=()=>{ suchQ=$('#q').value.trim(); render(); };
+  $('#ideen').onclick=e=>{ const v=e.target.dataset.v; if(!v) return; suchQ = suchQ===v?'':v; render(); };
+  $('#zus').onclick=e=>{ const v=e.target.dataset.v; if(!v) return; suchTags.has(v)?suchTags.delete(v):suchTags.add(v); suchQ=$('#q').value.trim(); render(); };
+  $('#aiIdee').onclick=e=>{ const q=fullQ()||$('#q').value.trim(); if(!q){toast('Bitte erst ein Stichwort eingeben');return;}
+    askClaude(`Ich möchte stricken: "${q}". Schlage 4 konkrete Modell-Ideen vor (je 1 Satz), nenne jeweils passende Garnstärke und Nadelstärke und gute deutsche Suchbegriffe für eine kostenlose Anleitung.`, $('#aiOut'), e.target, q); };
+};
+
+/* ---- Projekte ---- */
+const STATUS=['Idee','In Arbeit','Fertig'];
+let projFilter='alle';
+function photoURL(ph){ if(!ph) return ''; return ph.id ? '/_blob/'+ph.id : (ph.data||''); }
+function stTag(s){ return `<span class="tag ${s==='In Arbeit'?'o':s==='Fertig'?'':'b'}">${esc(s||'Idee')}</span>`; }
+function projCard(p){
+  const ph=(p.photos||[])[0];
+  return `<div class="proj" data-pid="${esc(p.id)}"><div class="ph" style="${ph?`background-image:url('${photoURL(ph)}')`:''}">${ph?'':'🧶'}</div>
+    <div class="bd"><b>${esc(p.title||'Ohne Titel')}</b><div>${stTag(p.status)}${p.public?'<span class="tag">geteilt</span>':''}</div>
+    ${p.yarn?`<div class="muted small" style="margin-top:4px">${esc(p.yarn)}</div>`:''}</div></div>`;
+}
+function bindProjCards(){ document.querySelectorAll('[data-pid]').forEach(el=>el.onclick=()=>openProject(el.dataset.pid)); }
+function storeHint(){
+  if (dbState==='ok') return '';
+  if (dbState==='laden') return '<div class="note">Wird geladen …</div><br>';
+  if (dbState==='langsam') return '<div class="note">Die Daten lassen sich gerade nicht erreichen – bitte Internetverbindung prüfen.</div><br>';
+  return '<div class="note">Auf diesem Gerät kann gerade nichts gespeichert werden (privates Surfen aktiv?). Bitte maschenzeit normal in Safari bzw. vom Home-Bildschirm öffnen.</div><br>';
+}
+VIEW.projekte = () => {
+  const P=myProjects(), list=P.filter(p=>projFilter==='alle'||p.status===projFilter);
+  return `<div class="row" style="justify-content:space-between"><h1>Meine Projekte</h1>
+    <button class="btn" id="neu" ${dbState!=='ok'?'disabled':''}>＋ Neues Projekt</button></div>
+    ${storeHint()}
+    <div class="chips" id="pf">${['alle',...STATUS].map(s=>`<span class="chip ${projFilter===s?'on':''}" data-v="${s}">${s==='alle'?'Alle':s} (${s==='alle'?P.length:P.filter(p=>p.status===s).length})</span>`).join('')}</div>
+    ${list.length?`<div class="grid">${list.map(projCard).join('')}</div>`:(dbState==='ok'?'<div class="card">Noch keine Projekte hier. Leg dein erstes an – mit Foto, Garn und Reihenzähler. Ideen gibt es unter <a href="#saison">Jahreszeiten</a>.</div>':'')}<br>${backupCard()}`;
+};
+AFTER.projekte = () => {
+  bindProjCards(); bindBackup();
+  $('#neu') && ($('#neu').onclick=()=>editProject(null));
+  $('#pf').onclick=e=>{ if(e.target.dataset.v){ projFilter=e.target.dataset.v; render(); } };
+};
+function closeOv(){ $('#ov').innerHTML=''; document.body.style.overflow=''; render(); }
+function openOv(html){ $('#ov').innerHTML=`<div class="overlay" id="ovbg"><div class="sheet">${html}</div></div>`; document.body.style.overflow='hidden';
+  $('#ovbg').addEventListener('click',e=>{ if(e.target.id==='ovbg') closeOv(); }); }
+const safeLink = l => /^https?:\/\//i.test(l)?l:'https://'+l;
+
+function openProject(id){
+  const p=myProjects().find(x=>x.id===id); if(!p) return;
+  const rep=+p.rep||0;
+  openOv(`<div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(p.title||'Ohne Titel')}</h2><button class="btn ghost sm" id="x">✕ Schließen</button></div>
+    <div>${stTag(p.status)}${p.public?'<span class="tag">geteilt</span>':''}</div>
+    <div class="bcard" style="margin-top:12px"><div class="hd"><b>Reihenzähler</b><button class="tbtn btn sm ${timerOn()?'ghost':'or'}" id="ptm" style="min-height:32px">${timerOn()?'⏹ Strickzeit':'▶ Strickzeit'}</button></div><div class="bd">
+      <div class="counter"><button class="m" id="cm" aria-label="minus">−</button><span class="n" id="cn">${p.rows||0}</span><button class="p" id="cp" aria-label="plus">＋</button></div>
+      <div id="crep" class="small" style="text-align:center"></div>
+      <div class="row" style="justify-content:center;margin-top:8px"><button class="btn ghost sm" id="c0">Auf 0 setzen</button></div></div></div>
+    ${(p.photos||[]).length?`<div class="big">${p.photos.map(ph=>`<img src="${photoURL(ph)}" alt="">`).join('')}</div>`:''}
+    <div class="card"><table class="t">
+      ${[['Garn',p.yarn],['Nadelstärke',p.needles],['Größe',p.size],['Maschenprobe',p.gauge],['Begonnen',p.start]].filter(r=>r[1]).map(r=>`<tr><th>${r[0]}</th><td>${esc(r[1])}</td></tr>`).join('')}
+      ${p.link?`<tr><th>Anleitung</th><td><a href="${esc(safeLink(p.link))}" target="_blank" rel="noopener">Anleitung öffnen →</a></td></tr>`:''}
+    </table>${p.notes?`<p style="white-space:pre-wrap">${esc(p.notes)}</p>`:''}</div>
+    <div class="row"><button class="btn" id="ed">✏️ Bearbeiten</button><button class="btn ghost" id="del">🗑️ Löschen</button></div>`);
+  $('#x').onclick=closeOv;
+  $('#ptm').onclick=()=>{ timerToggle(); $('#ptm').textContent=timerOn()?'⏹ Strickzeit':'▶ Strickzeit'; };
+  let n=p.rows||0, tmr=null;
+  const drawRep=()=>{ $('#crep').innerHTML = rep>0 && n>0 ? `Mustersatz <b>${Math.floor((n-1)/rep)+1}</b> · Reihe <b>${((n-1)%rep)+1}</b> von ${rep}` : (rep>0?`Mustersatz: ${rep} Reihen`:''); };
+  const save=()=>{ clearTimeout(tmr); tmr=setTimeout(()=>col().doc(p.id).update({rows:n}).catch(()=>toast('Zähler nicht gespeichert')),700); };
+  const set=v=>{ n=Math.max(0,v); $('#cn').textContent=n; drawRep(); save(); };
+  drawRep();
+  $('#cp').onclick=()=>set(n+1); $('#cm').onclick=()=>set(n-1); $('#c0').onclick=()=>set(0);
+  $('#ed').onclick=()=>editProject(p);
+  $('#del').onclick=()=>{ const b=$('#del'); if(b.dataset.sure){ deleteProject(p); } else { b.dataset.sure=1; b.textContent='Wirklich löschen? Nochmal tippen'; b.style.background='#fbe3dc'; } };
+}
+async function deleteProject(p){
+  try{ await col().doc(p.id).delete(); if(p.public) await DB.collection('gallery').doc(p.id).delete().catch(()=>{}); toast('Projekt gelöscht'); closeOv(); }
+  catch(e){ toast('Löschen hat nicht geklappt'); }
+}
+async function shrink(file, max){
+  const url=URL.createObjectURL(file);
+  const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  const s=Math.min(1, max/Math.max(img.naturalWidth,img.naturalHeight));
+  const c=document.createElement('canvas'); c.width=Math.round(img.naturalWidth*s); c.height=Math.round(img.naturalHeight*s);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url); return c;
+}
+async function addPhotos(files, arr, redraw){
+  for (const f of files){
+    try{
+      toast('Foto wird vorbereitet …');
+      if (ASSETS){ const c=await shrink(f,1600); const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.85)); const a=await ASSETS.upload(blob); arr.push({id:a.id}); }
+      else { const c=await shrink(f,1400); arr.push({data:c.toDataURL('image/jpeg',.8)}); }
+      redraw();
+    }catch(err){ toast('Foto konnte nicht geladen werden'); }
+  }
+}
+function editProject(p){
+  const d = p ? JSON.parse(JSON.stringify(p)) : {kind:'projekt',title:'',status:'In Arbeit',yarn:'',needles:'',size:'',gauge:'',link:'',notes:'',rep:'',photos:[],public:false,rows:0,start:new Date().toLocaleDateString('de-DE')};
+  const stashG=myStash().filter(s=>s.kind==='garn');
+  openOv(`<div class="row" style="justify-content:space-between"><h2 style="margin:0">${p?'Projekt bearbeiten':'Neues Projekt'}</h2><button class="btn ghost sm" id="x">✕</button></div>
+    <label class="f">Name des Projekts</label><input class="i" id="e_title" value="${esc(d.title)}" placeholder="z. B. Ringelsocken für die Enkel">
+    <label class="f">Stand</label><div class="chips" id="e_st">${STATUS.map(s=>`<span class="chip ${d.status===s?'on':''}" data-v="${s}">${s}</span>`).join('')}</div>
+    <div class="grid2" style="gap:0 16px">
+      <div><label class="f">Garn (Marke, Farbe, Menge)</label><input class="i" id="e_yarn" value="${esc(d.yarn)}" placeholder="z. B. Regia 4-fädig, 100 g" list="stashlist">
+        <datalist id="stashlist">${stashG.map(s=>`<option value="${esc([s.name,s.color].filter(Boolean).join(', '))}">`).join('')}</datalist></div>
+      <div><label class="f">Nadelstärke</label><input class="i" id="e_needles" value="${esc(d.needles)}" placeholder="z. B. 2,5 mm Nadelspiel"></div>
+      <div><label class="f">Größe</label><input class="i" id="e_size" value="${esc(d.size)}" placeholder="z. B. Gr. 40/41 oder M"></div>
+      <div><label class="f">Maschenprobe</label><input class="i" id="e_gauge" value="${esc(d.gauge)}" placeholder="z. B. 30 M × 42 R = 10 × 10 cm"></div>
+      <div><label class="f">Mustersatz (Reihen pro Wiederholung)</label><input class="i" id="e_rep" type="number" inputmode="numeric" value="${esc(d.rep)}" placeholder="optional, z. B. 8"></div>
+      <div><label class="f">Link zur Anleitung</label><input class="i" id="e_link" value="${esc(d.link)}" placeholder="https://…" inputmode="url"></div>
+    </div>
+    <label class="f">Notizen</label><textarea class="i" id="e_notes" placeholder="Änderungen, Fortschritt, was ich beim nächsten Mal anders mache …">${esc(d.notes)}</textarea>
+    <label class="f">Fotos</label>
+    <label class="btn sec sm" style="cursor:pointer">📷 Foto hinzufügen<input type="file" accept="image/*" multiple id="e_file" style="display:none"></label>
+    <div class="thumbs" id="e_th"></div>
+    <br><div class="row"><button class="btn" id="e_save">Speichern</button><button class="btn ghost" id="e_cancel">Abbrechen</button></div>`);
+  const th=()=>{ $('#e_th').innerHTML=d.photos.map((ph,i)=>`<div><img src="${photoURL(ph)}" alt=""><button data-i="${i}" title="entfernen">✕</button></div>`).join(''); };
+  th();
+  $('#e_th').onclick=e=>{ if(e.target.dataset.i!==undefined){ d.photos.splice(+e.target.dataset.i,1); th(); } };
+  $('#x').onclick=closeOv; $('#e_cancel').onclick=closeOv;
+  $('#e_st').onclick=e=>{ if(e.target.dataset.v){ d.status=e.target.dataset.v; $('#e_st').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.v===d.status)); } };
+  $('#e_file').onchange=async e=>{ await addPhotos(e.target.files, d.photos, th); e.target.value=''; };
+  $('#e_save').onclick=async ()=>{
+    for (const k of ['title','yarn','needles','size','gauge','link','notes','rep']) d[k]=$('#e_'+k).value.trim();
+    d.public=false; d.updated=Date.now(); d.kind='projekt'; if(!d.title) d.title='Ohne Titel';
+    const id = p ? p.id : newId('p'); const body={...d}; delete body.id;
+    const btn=$('#e_save'); btn.disabled=true;
+    try{
+      await col().doc(id).set(body);
+      const g=DB.collection('gallery').doc(id);
+      if (d.public) await g.set({owner:UID,title:d.title,status:d.status,yarn:d.yarn,needles:d.needles,size:d.size,notes:d.notes,link:d.link,photos:d.photos,updated:d.updated});
+      else if (p && p.public) await g.delete();
+      toast('Gespeichert ✓'); closeOv();
+    }catch(e){ btn.disabled=false; toast(e && e.code==='quota_exceeded'?'Speicher voll – bitte Fotos entfernen':'Speichern hat nicht geklappt'); }
+  };
+}
+
+/* ---- Vorrat ---- */
+let vTab='garn';
+VIEW.vorrat = () => {
+  const S=myStash().filter(s=>s.kind===vTab);
+  return `<div class="row" style="justify-content:space-between"><h1>Mein Vorrat</h1>
+    <button class="btn" id="vneu" ${dbState!=='ok'?'disabled':''}>＋ ${vTab==='garn'?'Garn':'Nadel'} hinzufügen</button></div>
+    ${storeHint()}
+    <div class="chips" id="vt"><span class="chip ${vTab==='garn'?'on':''}" data-v="garn">🧶 Wolle & Garn (${myStash().filter(s=>s.kind==='garn').length})</span><span class="chip ${vTab==='nadel'?'on':''}" data-v="nadel">🪡 Nadeln (${myStash().filter(s=>s.kind==='nadel').length})</span></div>
+    <p class="muted small">So weißt du beim Wollkauf, was schon da ist – und die Strick-Hilfe kann dir Projekte aus deinem Vorrat vorschlagen.</p>
+    ${S.length?`<div class="grid">${S.map(s=>`<div class="proj" data-sid="${esc(s.id)}"><div class="ph" style="aspect-ratio:3/2;${(s.photos||[])[0]?`background-image:url('${photoURL(s.photos[0])}')`:''}">${(s.photos||[])[0]?'':(vTab==='garn'?'🧶':'🪡')}</div>
+      <div class="bd"><b>${esc(s.name||'Ohne Namen')}</b><div class="small muted">${esc([s.color,s.weight,s.amount,s.meters?s.meters+' m':'',s.size?s.size+' mm':'',s.type].filter(Boolean).join(' · '))}</div></div></div>`).join('')}</div>`:(dbState==='ok'?'<div class="card">Noch nichts eingetragen.</div>':'')}
+    ${vTab==='garn'?`<br>${bcard('💡 Was stricke ich aus meinem Vorrat?', `<div class="row"><button class="btn" id="vai" ${!S.length?'disabled':''}>Ideen suchen</button></div><div id="vaiOut"></div>`)}`:''}`;
+};
+AFTER.vorrat = () => {
+  $('#vt').onclick=e=>{ if(e.target.dataset.v){ vTab=e.target.dataset.v; render(); } };
+  $('#vneu') && ($('#vneu').onclick=()=>editStash(null));
+  document.querySelectorAll('[data-sid]').forEach(el=>el.onclick=()=>editStash(myStash().find(s=>s.id===el.dataset.sid)));
+  $('#vai') && ($('#vai').onclick=e=>{
+    const list=myStash().filter(s=>s.kind==='garn').map(s=>'- '+[s.name,s.color,s.weight,s.amount,s.meters?s.meters+' m':''].filter(Boolean).join(', ')).join('\n');
+    askClaude('Das ist mein Wollvorrat:\n'+list+'\nSchlage 4 Projekte vor, die ich nur aus diesem Vorrat stricken kann (mit Garnzuordnung und Nadelstärke).', $('#vaiOut'), e.target, 'Projekt aus Restwolle');
+  });
+};
+function editStash(s){
+  const kind = s ? s.kind : vTab;
+  const d = s ? JSON.parse(JSON.stringify(s)) : {kind, name:'', color:'', weight:'', amount:'', meters:'', size:'', type:'', notes:'', photos:[]};
+  const F = kind==='garn'
+    ? [['name','Garn / Marke','z. B. Drops Karisma'],['color','Farbe / Partie','z. B. Dunkelrot, Partie 4521'],['weight','Garnstärke','z. B. Sockengarn, DK, Aran'],['amount','Menge','z. B. 4 Knäuel à 50 g'],['meters','Lauflänge gesamt (m)','z. B. 400']]
+    : [['size','Stärke (mm)','z. B. 3,5'],['type','Art','z. B. Rundnadel 80 cm, Nadelspiel, Wechselseil'],['name','Marke / Material','z. B. addi, Holz']];
+  openOv(`<div class="row" style="justify-content:space-between"><h2 style="margin:0">${s?'Bearbeiten':(kind==='garn'?'Garn hinzufügen':'Nadel hinzufügen')}</h2><button class="btn ghost sm" id="x">✕</button></div>
+    ${F.map(f=>`<label class="f">${f[1]}</label><input class="i" id="s_${f[0]}" value="${esc(d[f[0]])}" placeholder="${f[2]}">`).join('')}
+    <label class="f">Notiz</label><textarea class="i" id="s_notes" style="min-height:70px">${esc(d.notes)}</textarea>
+    <label class="f">Foto (z. B. die Banderole)</label><label class="btn sec sm" style="cursor:pointer">📷 Foto<input type="file" accept="image/*" id="s_file" style="display:none"></label><div class="thumbs" id="s_th"></div>
+    <br><div class="row"><button class="btn" id="s_save">Speichern</button>${s?'<button class="btn ghost" id="s_del">🗑️ Löschen</button>':''}</div>`);
+  const th=()=>{ $('#s_th').innerHTML=d.photos.map((ph,i)=>`<div><img src="${photoURL(ph)}" alt=""><button data-i="${i}">✕</button></div>`).join(''); };
+  th(); $('#s_th').onclick=e=>{ if(e.target.dataset.i!==undefined){ d.photos.splice(+e.target.dataset.i,1); th(); } };
+  $('#x').onclick=closeOv;
+  $('#s_file').onchange=async e=>{ await addPhotos(e.target.files, d.photos, th); e.target.value=''; };
+  $('#s_save').onclick=async()=>{ F.forEach(f=>d[f[0]]=$('#s_'+f[0]).value.trim()); d.notes=$('#s_notes').value.trim(); d.updated=Date.now();
+    const id=s?s.id:newId(kind==='garn'?'g':'n'); const body={...d}; delete body.id;
+    try{ await col().doc(id).set(body); toast('Gespeichert ✓'); closeOv(); }catch(e){ toast('Speichern hat nicht geklappt'); } };
+  $('#s_del') && ($('#s_del').onclick=async()=>{ const b=$('#s_del'); if(!b.dataset.sure){ b.dataset.sure=1; b.textContent='Wirklich löschen? Nochmal tippen'; return; }
+    try{ await col().doc(s.id).delete(); toast('Gelöscht'); closeOv(); }catch(e){ toast('Löschen hat nicht geklappt'); } });
+}
+
+/* ---- Galerie ---- */
+let names={};
+VIEW.galerie = () => `<h1>Galerie</h1>
+  <p class="muted">Projekte, die freiwillig geteilt wurden. Eigene Projekte teilst du über „Bearbeiten → In der Galerie zeigen“.</p>
+  ${storeHint()}
+  ${gallery.length?`<div class="grid">${gallery.map(g=>`<div class="proj" data-gid="${esc(g.id)}"><div class="ph" style="${(g.photos||[])[0]?`background-image:url('${photoURL(g.photos[0])}')`:''}">${(g.photos||[])[0]?'':'🧶'}</div>
+    <div class="bd"><b>${esc(g.title)}</b><div class="muted small">von <span data-owner="${esc(g.owner)}">${esc(names[g.owner]||'…')}</span></div>
+    ${g.yarn?`<div class="muted small">${esc(g.yarn)}</div>`:''}</div></div>`).join('')}</div>`:(dbState==='ok'?'<div class="card">Noch nichts geteilt.</div>':'')}`;
+AFTER.galerie = async () => {
+  document.querySelectorAll('[data-gid]').forEach(el=>el.onclick=()=>{
+    const g=gallery.find(x=>x.id===el.dataset.gid); if(!g) return;
+    openOv(`<div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(g.title)}</h2><button class="btn ghost sm" id="x">✕</button></div>
+      <p class="muted">von ${esc(names[g.owner]||'jemandem')} · ${esc(g.status||'')}</p>
+      <div class="big">${(g.photos||[]).map(ph=>`<img src="${photoURL(ph)}" alt="">`).join('')}</div>
+      <div class="card"><table class="t">${[['Garn',g.yarn],['Nadelstärke',g.needles],['Größe',g.size]].filter(r=>r[1]).map(r=>`<tr><th>${r[0]}</th><td>${esc(r[1])}</td></tr>`).join('')}
+      ${g.link?`<tr><th>Anleitung</th><td><a href="${esc(safeLink(g.link))}" target="_blank" rel="noopener">öffnen →</a></td></tr>`:''}</table>
+      ${g.notes?`<p style="white-space:pre-wrap">${esc(g.notes)}</p>`:''}</div>`);
+    $('#x').onclick=closeOv;
+  });
+  const ids=[...new Set(gallery.map(g=>g.owner).filter(Boolean))].filter(i=>!names[i]);
+  if (USER && ids.length && USER.profiles){
+    try{ const ps=await USER.profiles(ids); ids.forEach(i=>names[i]=(ps[i]&&ps[i].name)||'Jemand');
+      document.querySelectorAll('[data-owner]').forEach(s=>s.textContent=names[s.dataset.owner]||'Jemand'); }catch(e){}
+  }
+};
+
+/* ---- Rechner ---- */
+VIEW.rechner = () => `<h1>Umrechnen</h1>
+  <div class="grid2">
+    ${bcard('1 · Maschenzahl an mein Garn anpassen', `<div class="small">Die Anleitung hat eine andere Maschenprobe als dein Garn? Hier wird jede Maschen- und Reihenzahl umgerechnet.</div>
+      <div class="grid2" style="gap:0 12px;grid-template-columns:1fr 1fr">
+        <div><label class="f">Anleitung: M / 10 cm</label><input class="i" type="number" inputmode="decimal" id="r_am" placeholder="z. B. 22"></div>
+        <div><label class="f">Meine M / 10 cm</label><input class="i" type="number" inputmode="decimal" id="r_mm" placeholder="z. B. 18"></div>
+        <div><label class="f">Anleitung: R / 10 cm</label><input class="i" type="number" inputmode="decimal" id="r_ar" placeholder="optional"></div>
+        <div><label class="f">Meine R / 10 cm</label><input class="i" type="number" inputmode="decimal" id="r_mr" placeholder="optional"></div>
+      </div>
+      <label class="f">Zahlen aus der Anleitung</label>
+      <input class="i" id="r_list" placeholder="z. B. 96 104 112 oder 84 (92) 100">
+      <div id="r_out" style="margin-top:10px"></div>`)}
+    ${bcard('2 · Wie viele Maschen anschlagen?', `<div class="small">Für eine gewünschte Breite oder Weite – z. B. Pullover-Brustweite.</div>
+      <div class="grid2" style="gap:0 12px;grid-template-columns:1fr 1fr">
+        <div><label class="f">Breite in cm</label><input class="i" type="number" inputmode="decimal" id="b_cm" placeholder="z. B. 50"></div>
+        <div><label class="f">Meine M / 10 cm</label><input class="i" type="number" inputmode="decimal" id="b_m" placeholder="z. B. 20"></div>
+        <div><label class="f">Mustersatz (teilbar durch)</label><input class="i" type="number" inputmode="numeric" id="b_rap" placeholder="optional"></div>
+        <div><label class="f">Randmaschen</label><input class="i" type="number" inputmode="numeric" id="b_rand" value="2"></div>
+      </div>
+      <div id="b_out" style="margin-top:10px"></div>
+      <div class="small muted" style="margin-top:8px">Bewegungszugabe beim Pullover: eng 0–5 cm, normal 5–10 cm, locker/oversize 15 cm und mehr zur Brustweite dazurechnen.</div>`)}
+    ${bcard('3 · Wie viel Ersatzgarn?', `<div class="small">Bei anderem Garn als in der Anleitung zählen die Meter, nicht die Gramm.</div>
+      <div class="grid2" style="gap:0 12px;grid-template-columns:1fr 1fr">
+        <div><label class="f">Anleitung: Knäuel</label><input class="i" type="number" inputmode="decimal" id="g_n" placeholder="z. B. 10"></div>
+        <div><label class="f">Anleitung: m / Knäuel</label><input class="i" type="number" inputmode="decimal" id="g_m" placeholder="z. B. 100"></div>
+        <div><label class="f">Mein Garn: m / Knäuel</label><input class="i" type="number" inputmode="decimal" id="g_mm" placeholder="z. B. 125"></div>
+        <div><label class="f">Preis / Knäuel (€)</label><input class="i" type="number" inputmode="decimal" id="g_p" placeholder="optional"></div>
+      </div>
+      <div id="g_out" style="margin-top:10px"></div>`)}
+    ${bcard('4 · Frag die Strick-Hilfe', `<div class="small">Für knifflige Fälle, z. B. „Anleitung ist für Größe 38, ich brauche 44“.</div>
+      <textarea class="i" id="r_q" style="margin-top:8px" placeholder="Deine Frage …"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="r_ask">Antwort suchen</button></div><div id="r_ai"></div>`)}
+  </div>
+  ${bcard('Garnstärken-Tabelle', `<div class="scroll"><table class="t">
+    <tr><th>Kl.</th><th>Deutsch</th><th>Englisch</th><th>Nadel mm</th><th>M / 10 cm</th><th>m je 50 g</th></tr>
+    ${GARN.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>
+    <div class="small muted" style="margin-top:6px">Richtwerte nach Craft Yarn Council. Immer eine Maschenprobe stricken!</div>`)}
+  ${bcard('Nadelstärken: mm – US – UK', `<div class="scroll"><table class="t">
+    <tr><th>mm</th><th>US</th><th>UK</th><th></th><th>mm</th><th>US</th><th>UK</th></tr>
+    ${Array.from({length:Math.ceil(NADEL.length/2)},(_,i)=>{const a=NADEL[i],b=NADEL[i+Math.ceil(NADEL.length/2)]||['','',''];return `<tr><td><b>${a[0]}</b></td><td>${a[1]}</td><td>${a[2]}</td><td></td><td><b>${b[0]}</b></td><td>${b[1]}</td><td>${b[2]}</td></tr>`;}).join('')}
+  </table></div>`)}`;
+const num = id => { const v=parseFloat(String($(id).value).replace(',','.')); return isFinite(v)&&v>0?v:null; };
+const fmt = (v,d=1) => v.toLocaleString('de-DE',{maximumFractionDigits:d});
+AFTER.rechner = () => {
+  const r1=()=>{ const am=num('#r_am'),mm=num('#r_mm'),ar=num('#r_ar'),mr=num('#r_mr'); const out=$('#r_out');
+    if(!am||!mm){ out.innerHTML='<span class="muted small">Bitte beide Maschenproben eintragen.</span>'; return; }
+    const f=mm/am, nums=($('#r_list').value.match(/\d+([.,]\d+)?/g)||[]).map(x=>parseFloat(x.replace(',','.')));
+    let h=`<div>Faktor Maschen: <b>${fmt(f,3)}</b>${ar&&mr?` · Reihen: <b>${fmt(mr/ar,3)}</b>`:''}</div>`;
+    if(nums.length) h+=`<table class="t" style="margin-top:8px"><tr><th>Anleitung</th><th>Maschen neu</th>${ar&&mr?'<th>Reihen neu</th>':''}</tr>${nums.map(n=>`<tr><td>${fmt(n)}</td><td class="result" style="font-size:1.2rem">${Math.round(n*f)}</td>${ar&&mr?`<td>${Math.round(n*mr/ar)}</td>`:''}</tr>`).join('')}</table>
+      <div class="small muted">Gerundet. Bei Mustersätzen auf die nächste passende Zahl anpassen.</div>`;
+    out.innerHTML=h; };
+  ['#r_am','#r_mm','#r_ar','#r_mr','#r_list'].forEach(i=>$(i).addEventListener('input',r1)); r1();
+  const r2=()=>{ const cm=num('#b_cm'),m=num('#b_m'),rap=num('#b_rap'); const rand=parseInt($('#b_rand').value)||0; const out=$('#b_out');
+    if(!cm||!m){ out.innerHTML='<span class="muted small">Breite und Maschenprobe eintragen.</span>'; return; }
+    const n=cm*m/10; let base=Math.round(n); if(rap) base=Math.max(rap,Math.round(n/rap)*rap);
+    out.innerHTML=`<div class="result">${base+rand} Maschen</div><div class="small muted">${fmt(n)} M rechnerisch${rap?`, auf Mustersatz ${rap} gerundet`:''}${rand?` + ${rand} Randmaschen`:''} → ca. ${fmt(base/m*10)} cm</div>`; };
+  ['#b_cm','#b_m','#b_rap','#b_rand'].forEach(i=>$(i).addEventListener('input',r2)); r2();
+  const r3=()=>{ const n=num('#g_n'),m=num('#g_m'),mm=num('#g_mm'),p=num('#g_p'); const out=$('#g_out');
+    if(!n||!m||!mm){ out.innerHTML='<span class="muted small">Knäuel und Lauflängen eintragen.</span>'; return; }
+    const meter=n*m, k=Math.ceil(meter/mm);
+    out.innerHTML=`<div class="result">${k} Knäuel</div><div class="small muted">Gesamt ${fmt(meter,0)} m${p?` · ca. ${fmt(k*p,2)} €`:''}. Tipp: 1 Knäuel Reserve aus derselben Partie kaufen.</div>`; };
+  ['#g_n','#g_m','#g_mm','#g_p'].forEach(i=>$(i).addEventListener('input',r3)); r3();
+  $('#r_ask').onclick=e=>{ const q=$('#r_q').value.trim(); if(!q) return toast('Bitte eine Frage eingeben'); askClaude('Frage zum Umrechnen beim Stricken: '+q+'\nRechne nachvollziehbar vor und runde auf ganze Maschen.', $('#r_ai'), e.target, q); };
+};
+
+/* ---- Tipps & Lernen ---- */
+let tipCat='Alle';
+VIEW.lernen = () => {
+  const cats=['Alle',...new Set(TIPS.map(t=>t[0]))];
+  const list=TIPS.filter(t=>tipCat==='Alle'||t[0]===tipCat);
+  return `<h1>Tipps & Lernen</h1>
+  ${bcard('🙋 Frag die Strick-Hilfe', `<textarea class="i" id="l_q" placeholder="z. B. Wie stricke ich eine Bumerangferse? / Was heißt „ssk“? / Meine Kanten werden wellig – was tun?"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" id="l_ask">Antwort suchen</button><a class="btn sec" id="l_yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=stricken+lernen+deutsch">▶️ Als Video suchen</a></div>
+    <div id="l_ai"></div>`)}
+  <h2>${TIPS.length} Tipps aus aller Welt</h2>
+  <div class="chips" id="tc">${cats.map(c=>`<span class="chip ${tipCat===c?'on':''}" data-v="${c}">${c}</span>`).join('')}</div>
+  <div class="grid">${list.map(t=>`<div class="tipp" style="margin:0"><div class="eyebrow">${t[0]}</div><div>${esc(t[1])}</div></div>`).join('')}</div>
+  <br>
+  ${LERN.map(([t,items])=>`<h2>${t}</h2>${items.map(([h,b])=>`<details class="lern"><summary>${h}</summary><p>${b}</p>
+    <a class="go" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(h+' stricken')}">▶️ Video dazu ansehen →</a><br><br></details>`).join('')}`).join('')}`;
+};
+AFTER.lernen = () => {
+  $('#tc').onclick=e=>{ if(e.target.dataset.v){ tipCat=e.target.dataset.v; const y=window.scrollY; render(); window.scrollTo(0,y); } };
+  $('#l_q').addEventListener('input',()=>{ $('#l_yt').href='https://www.youtube.com/results?search_query='+enc(($('#l_q').value.trim()||'stricken lernen')+' stricken deutsch'); });
+  $('#l_ask').onclick=e=>{ const q=$('#l_q').value.trim(); if(!q) return toast('Bitte eine Frage eingeben'); askClaude('Strickfrage: '+q, $('#l_ai'), e.target, q); };
+};
+
+/* ---- Stricken weltweit ---- */
+VIEW.welt = () => `<h1>Stricken weltweit</h1>
+  <p class="muted">Wie man anderswo strickt – Traditionen, Lebensgefühl und Ideen zum Nachmachen.</p>
+  <div class="grid2">${WELT.map((w,i)=>bcard(`${w[0]} ${w[1]}`, `<div class="eyebrow o">${String(i+1).padStart(2,'0')} / ${String(WELT.length).padStart(2,'0')}</div><p>${w[2]}</p>
+    <div class="row"><button class="btn sm" data-q="${esc(w[3])}">Anleitungen →</button><a class="btn sec sm" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(w[3])}">▶️ Videos</a></div>`)).join('')}</div>
+  ${bcard('Warum Stricken guttut', `<p>Eine große britische Umfrage unter über 3.500 Strickenden (Riley, Corkhill & Morris, 2013) zeigte: Wer häufig strickt, fühlt sich ruhiger und glücklicher. Eine Studie der Universität Göteborg beschreibt, dass Stricken beruhigt, dem Alltag Struktur gibt und zur eigenen Identität gehört.</p>
+    <p class="small muted">Wichtig dabei: Pausen machen, Hände lockern, aufstehen – dafür gibt es auf der Startseite die „Strickzeit“ mit Pausen-Erinnerung.</p>`)}`;
+AFTER.welt = () => { document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ suchQ=b.dataset.q; suchTags.clear(); location.hash='anleitungen'; }); };
+
+/* ---- Wolle ---- */
+let wq='';
+VIEW.wolle = () => `<h1>Wolle kaufen – mit Lieferung</h1>
+  <div class="card"><label class="f" for="w_q">Welche Wolle suchst du?</label>
+    <input class="i" id="w_q" value="${esc(wq)}" placeholder="z. B. Sockenwolle 4-fach, Merino mulesingfrei, Alpaka">
+    <div class="chips" id="w_c">${['Sockenwolle','Merino mulesingfrei','Bio-Baumwolle','Alpaka','Recycling-Garn','Restposten Wolle'].map(x=>`<span class="chip" data-v="${x}">${x}</span>`).join('')}</div>
+    <div id="w_links"></div></div>
+  <h2>Empfohlene Shops</h2>
+  <div class="grid2">${SHOPS.map(s=>`<a class="link" href="${s.u}" target="_blank" rel="noopener"><span class="em">${s.t[0]==='unser Shop'?'🏠':'🧶'}</span><span><b>${s.n}</b><span class="small">${s.d}</span><br>${s.t.map(t=>`<span class="tag ${t==='nachhaltig'?'':t==='unser Shop'?'o':'b'}">${t}</span>`).join('')}</span></a>`).join('')}</div>
+  <br>${bcard('Woran erkenne ich nachhaltige Wolle?', `<table class="t">${SIEGEL.map(s=>`<tr><th style="width:130px">${s[0]}</th><td>${s[1]}</td></tr>`).join('')}</table>
+  <p class="small muted">Spartipps: Restposten und Auslaufgarne, DROPS-Rabattwochen, Set-Preise für einen ganzen Pullover. Erst im <a href="#vorrat">Vorrat</a> nachsehen, dann kaufen.</p>`)}`;
+function drawW(){ const q=$('#w_q').value.trim(); wq=q; const el=$('#w_links');
+  if(!q){ el.innerHTML=''; return; }
+  const L=[['🔍 Preisvergleich (Google Shopping)',`https://www.google.com/search?tbm=shop&q=${enc(q+' wolle')}`],
+    ['💶 Günstigster Preis (idealo)',`https://www.idealo.de/preisvergleich/MainSearchProductCategory.html?q=${enc(q+' wolle')}`],
+    ['🌱 Bei Soul Wool (nachhaltig)',`https://www.google.com/search?q=${enc('site:soul-wool.com '+q)}`],
+    ['🧶 Bei Wollplatz',`https://www.google.com/search?q=${enc('site:wollplatz.de '+q)}`]];
+  el.innerHTML=`<div class="grid2" style="margin-top:10px">${L.map(l=>`<a class="link" href="${l[1]}" target="_blank" rel="noopener"><span><b>${l[0]}</b><span class="small">„${esc(q)}“</span></span></a>`).join('')}</div>`; }
+AFTER.wolle = () => { $('#w_q').addEventListener('input',drawW); $('#w_c').onclick=e=>{ if(e.target.dataset.v){ $('#w_q').value=e.target.dataset.v; drawW(); } }; drawW(); };
+
+/* ---- Upcycling ---- */
+VIEW.upcycling = () => `<h1>Upcycling & DIY</h1>
+  <p class="muted">Was man hat, optimal nutzen – statt immer neu zu kaufen.</p>
+  ${bcard('♻️ Was kann ich daraus machen?', `<textarea class="i" id="u_q" placeholder="z. B. 3 alte Wollpullover (einer verfilzt), ein Rest Sockenwolle in Blau und Grau, ein altes Jeanshemd …"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" id="u_ask">Ideen suchen</button>
+      <a class="btn sec" id="u_pin" target="_blank" rel="noopener" href="https://de.pinterest.com/search/pins/?q=upcycling%20wolle">📌 Pinterest</a></div>
+    <div id="u_ai"></div>`)}
+  <div class="grid2">${UPCYCLE.map(([e,t,b])=>`<div class="card" style="margin:0"><div class="split" style="grid-template-columns:72px 1fr"><div class="oval" style="font-size:2rem">${e}</div><div><h3>${t}</h3><div class="small">${b}</div>
+    <a class="go" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(t+' upcycling anleitung')}">▶️ Video-Anleitungen →</a></div></div></div>`).join('')}</div>`;
+AFTER.upcycling = () => {
+  $('#u_q').addEventListener('input',()=>{ $('#u_pin').href='https://de.pinterest.com/search/pins/?q='+enc(($('#u_q').value.trim()||'wolle')+' upcycling'); });
+  $('#u_ask').onclick=e=>{ const q=$('#u_q').value.trim(); if(!q) return toast('Bitte beschreiben, was du hast'); askClaude('Ich habe folgende Dinge/Reste: '+q+'\nSchlage 4 praktische Upcycling- oder Strick-/Häkelideen vor, je mit kurzer Anleitung in 2–3 Schritten und Schwierigkeit.', $('#u_ai'), e.target, q+' upcycling'); };
+};
+
+render();
+initCaps();
+setTimeout(()=>{ if(dbState==='laden' && !DB){ dbState='aus'; render(true); } }, 11000);
+</script>
+</body>
+</html>
